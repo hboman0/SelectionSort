@@ -16,9 +16,6 @@ public class SelectionSort {
     }
 
     public void sort(int[] array) {
-        comparisons = 0;
-        swaps = 0;
-
         if (array == null || array.length <= 1) {
             return;
         }
@@ -26,15 +23,23 @@ public class SelectionSort {
         int n = array.length;
         for (int i = 0; i < n - 1; i++) {
             int minIndex = i;
+            boolean sorted = true;
+
             for (int j = i + 1; j < n; j++) {
-                comparisons++;
                 if (array[j] < array[minIndex]) {
                     minIndex = j;
+                    sorted = false;
                 }
             }
+
             if (minIndex != i) {
-                swap(array, i, minIndex);
+                int temp = array[i];
+                array[i] = array[minIndex];
+                array[minIndex] = temp;
+                sorted = false;
             }
+
+            if (sorted) break;
         }
     }
 
