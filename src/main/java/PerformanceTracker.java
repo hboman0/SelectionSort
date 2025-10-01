@@ -1,35 +1,43 @@
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class PerformanceTracker {
     private long comparisons;
     private long swaps;
-    private long timeNano;
+    private long startTime;
+    private long endTime;
 
     public void start() {
-        comparisons = 0;
-        swaps = 0;
-        timeNano = System.nanoTime();
+        startTime = System.nanoTime();
     }
 
     public void stop() {
-        timeNano = System.nanoTime() - timeNano;
+        endTime = System.nanoTime();
     }
 
-    public void addComparisons(long c) {
-        comparisons += c;
+    public void incrementComparisons() { comparisons++; }
+    public void incrementSwaps() { swaps++; }
+
+    public long getComparisons() { return comparisons; }
+    public long getSwaps() { return swaps; }
+    public long getExecutionTime() { return endTime - startTime; }
+
+    public void exportToCSV(String filename, String algorithm, int size) {
+        try (FileWriter writer = new FileWriter(filename, true)) {
+            writer.append(algorithm).append(",")
+                  .append(String.valueOf(size)).append(",")
+                  .append(String.valueOf(comparisons)).append(",")
+                  .append(String.valueOf(swaps)).append(",")
+                  .append(String.valueOf(getExecutionTime())).append("\n");
+        } catch (IOException e) {
+            System.err.println("Error writing CSV: " + e.getMessage());
+        }
     }
 
-    public void addSwaps(long s) {
-        swaps += s;
-    }
-
-    public long getComparisons() {
-        return comparisons;
-    }
-
-    public long getSwaps() {
-        return swaps;
-    }
-
-    public long getElapsedTime() {
-        return timeNano;
+    public void reset() {
+        comparisons = 0;
+        swaps = 0;
+        startTime = 0;
+        endTime = 0;
     }
 }
