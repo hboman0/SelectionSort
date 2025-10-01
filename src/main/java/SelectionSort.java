@@ -1,47 +1,33 @@
 public class SelectionSort {
-    private long comparisons;
-    private long swaps;
+    private final PerformanceTracker tracker;
 
+    public SelectionSort(PerformanceTracker tracker) {
+        this.tracker = tracker;
+    }
     public SelectionSort() {
-        this.comparisons = 0;
-        this.swaps = 0;
+        this.tracker = new PerformanceTracker();
     }
 
-    public long getComparisons() {
-        return comparisons;
-    }
-
-    public long getSwaps() {
-        return swaps;
-    }
-
-    public void sort(int[] array) {
-        comparisons = 0;
-        swaps = 0;
-
-        if (array == null || array.length <= 1) {
-            return;
-        }
-
-        int n = array.length;
+    public void sort(int[] arr) {
+        int n = arr.length;
         for (int i = 0; i < n - 1; i++) {
             int minIndex = i;
             for (int j = i + 1; j < n; j++) {
-                comparisons++;
-                if (array[j] < array[minIndex]) {
+                tracker.incrementComparisons();
+                if (arr[j] < arr[minIndex]) {
                     minIndex = j;
                 }
             }
             if (minIndex != i) {
-                swap(array, i, minIndex);
+                swap(arr, i, minIndex);
             }
         }
     }
 
-    private void swap(int[] array, int i, int j) {
-        swaps++;
-        int temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+    private void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+        tracker.incrementSwaps();
     }
 }
